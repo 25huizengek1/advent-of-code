@@ -9,6 +9,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.cookie
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.userAgent
 import nl.bartoostveen.aoc.days.day202501
 import nl.bartoostveen.aoc.util.printException
 import nl.bartoostveen.aoc.util.splitAtIndex
@@ -45,7 +46,9 @@ suspend fun main(args: Array<String>) {
     val solution = solutions[year]?.get(day) ?: return println("Day $day of $year not yet implemented!")
 
     val inputs = runCatching {
-        val cacheFile = Environment.AOC_INPUT_CACHE.resolve("$year${day.toString().padStart(2, '0')}.txt")
+        val cacheFile = Environment.AOC_INPUT_CACHE
+            .resolve("$year${day.toString().padStart(2, '0')}.txt")
+
         cacheFile.takeIf { it.exists() }?.readText()?.takeIf { it.isNotBlank() }
             ?: fetchInputs(year, day).also(cacheFile::writeText)
     }.printException().getOrNull() ?: return println("Cannot get inputs, stopping...")
@@ -64,6 +67,7 @@ val httpClient = HttpClient(CIO) {
     defaultRequest {
         url("https://adventofcode.com")
         cookie("session", Environment.AOC_TOKEN)
+        userAgent("AoC solver Bart Oostveen (github:25huizengek1)")
     }
 }
 
