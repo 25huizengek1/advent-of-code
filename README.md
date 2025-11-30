@@ -1,4 +1,4 @@
-# Advent of Code
+# 🎄 Advent of Code 🎄
 
 This repository contains my (Bart Oostveen) Advent of Code solutions. This year (2025, at least as of writing), I am not
 going to race to be the fastest to complete the puzzles. Instead, I'll submit my solutions later on the day. This is
