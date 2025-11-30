@@ -1,0 +1,8 @@
+/.envrc
+/.direnv
+.idea
+build
+.gradle
+.kotlin
+/.cache
+.env
