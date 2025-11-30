@@ -67,7 +67,7 @@ val httpClient = HttpClient(CIO) {
     defaultRequest {
         url("https://adventofcode.com")
         cookie("session", Environment.AOC_TOKEN)
-        userAgent("AoC solver Bart Oostveen (github:25huizengek1)")
+        userAgent("AoC runner Bart Oostveen (github:25huizengek1)")
     }
 }
 

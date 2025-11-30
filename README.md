@@ -72,15 +72,6 @@ $ gradle run --args="<year> <day>"
 - [ ] Day 12
     - [ ] Part 1
     - [ ] Part 2
-- [ ] Day 13
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 14
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 15
-    - [ ] Part 1
-    - [ ] Part 2
 
 ## Misc
 
