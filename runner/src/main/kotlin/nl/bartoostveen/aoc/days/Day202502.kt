@@ -2,5 +2,5 @@ package nl.bartoostveen.aoc.days
 
 import nl.bartoostveen.aoc.runner.puzzle
 
-val day20250x = puzzle {
+val day202502 = puzzle {
 }

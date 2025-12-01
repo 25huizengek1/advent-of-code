@@ -10,7 +10,7 @@ import io.ktor.client.request.cookie
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.userAgent
-import nl.bartoostveen.aoc.days.day202501
+import nl.bartoostveen.aoc.days.*
 import nl.bartoostveen.aoc.util.printException
 import nl.bartoostveen.aoc.util.splitAtIndex
 import java.io.File
@@ -19,11 +19,31 @@ import java.time.Month
 
 val env = System.getenv().toMutableMap()
 
-val solutions = mapOf(
+val solutions: Map<Int, Map<Int, Puzzle.() -> Unit>> = mapOf(
     2025 to mapOf(
-        1 to ::day202501,
+        1 to day202501,
+        2 to day202502,
     ),
 )
+
+data class Puzzle(
+    val raw: String
+) {
+    val lines: List<String> by lazy {
+        raw.lines().filter { it.isNotBlank() }.map { it.trim() }
+    }
+
+    var partOne: Any? = null
+    var partTwo: Any? = null
+
+    fun print() {
+        println("Solved AOC puzzle:")
+        println("Part one: ${partOne ?: "Unimplemented"}")
+        println("Part two: ${partTwo ?: "Unimplemented"}")
+    }
+}
+
+fun puzzle(block: Puzzle.() -> Unit) = block
 
 suspend fun main(args: Array<String>) {
     val envFile = File(args.firstOrNull() ?: ".env")
@@ -51,10 +71,11 @@ suspend fun main(args: Array<String>) {
 
         cacheFile.takeIf { it.exists() }?.readText()?.takeIf { it.isNotBlank() }
             ?: fetchInputs(year, day).also(cacheFile::writeText)
-    }.printException().getOrNull() ?: return println("Cannot get inputs, stopping...")
+    }.printException().getOrNull()
+        ?: return println("Cannot get inputs, stopping...")
 
     println("Running day $day of $year...")
-    solution(inputs)
+    Puzzle(inputs).also(solution).print()
 }
 
 val httpClient = HttpClient(CIO) {
