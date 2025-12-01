@@ -2,7 +2,6 @@ package nl.bartoostveen.aoc.runner
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
@@ -16,6 +15,8 @@ import nl.bartoostveen.aoc.util.splitAtIndex
 import java.io.File
 import java.time.LocalDateTime
 import java.time.Month
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 val env = System.getenv().toMutableMap()
 
@@ -33,13 +34,35 @@ data class Puzzle(
         raw.lines().filter { it.isNotBlank() }.map { it.trim() }
     }
 
-    var partOne: Any? = null
-    var partTwo: Any? = null
+    private val values = mutableListOf<Any?>()
+
+    private fun <T : Any> part() = object : ReadWriteProperty<Puzzle, T?> {
+        private val index = values.size
+
+        init {
+            values.add(null)
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        override fun getValue(thisRef: Puzzle, property: KProperty<*>) = values[index] as? T
+
+        override fun setValue(
+            thisRef: Puzzle,
+            property: KProperty<*>,
+            value: T?
+        ) {
+            values[index] = value
+        }
+    }
+
+    var partOne: Any? by part()
+    var partTwo: Any? by part()
 
     fun print() {
         println("Solved AOC puzzle:")
-        println("Part one: ${partOne ?: "Unimplemented"}")
-        println("Part two: ${partTwo ?: "Unimplemented"}")
+        values.forEachIndexed { i, value ->
+            println("Part ${i + 1}: ${value ?: "Unimplemented"}")
+        }
     }
 }
 
