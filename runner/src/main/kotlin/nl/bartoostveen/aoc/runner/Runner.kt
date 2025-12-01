@@ -79,7 +79,6 @@ suspend fun main(args: Array<String>) {
 }
 
 val httpClient = HttpClient(CIO) {
-    install(ContentNegotiation) {}
     install(Logging) {
         level = LogLevel.INFO
         sanitizeHeader { it.equals("cookie", ignoreCase = true) }
