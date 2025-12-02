@@ -17,7 +17,6 @@ import java.time.LocalDateTime
 import java.time.Month
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
-import kotlin.system.measureNanoTime
 import kotlin.time.measureTimedValue
 
 val env = System.getenv().toMutableMap()
@@ -69,7 +68,10 @@ data class Puzzle(
     }
 }
 
-fun puzzle(block: Puzzle.() -> Unit) = block
+typealias Solution = Puzzle.() -> Unit
+
+// marker function
+fun puzzle(block: Solution) = block
 
 inline fun <T> printMicros(
     name: String? = null,
@@ -96,7 +98,8 @@ suspend fun main(args: Array<String>) {
     val day = args.getOrNull(1)?.toIntOrNull()
         ?: if (now.month == Month.DECEMBER) now.dayOfMonth else 1
 
-    val solution = solutions[year]?.get(day) ?: return println("Day $day of $year not yet implemented!")
+    val solution: Solution = solutions[year]?.get(day)
+        ?: return println("Day $day of $year not yet implemented!")
 
     val fileName = "$year${day.toString().padStart(2, '0')}"
     val inputs = runCatching {

@@ -1,6 +1,7 @@
 package nl.bartoostveen.aoc.days
 
 import nl.bartoostveen.aoc.runner.puzzle
+import nl.bartoostveen.aoc.util.startsWithFromIndex
 
 val day202502 = puzzle {
     val ranges = lines
@@ -28,13 +29,9 @@ val day202502 = puzzle {
 
             forLoop@ for (i in 1..(len shr 1)) {
                 if (len % i != 0) continue
-
-                var copy = str.drop(i)
                 val substring = str.take(i)
-
-                while (copy.isNotEmpty()) {
-                    if (copy.startsWith(substring)) copy = copy.drop(i)
-                    else continue@forLoop
+                for (j in 0..<len / i) {
+                    if (!str.startsWithFromIndex(i * j, substring)) continue@forLoop
                 }
 
                 return@innerSum num
@@ -44,3 +41,4 @@ val day202502 = puzzle {
         }
     }
 }
+

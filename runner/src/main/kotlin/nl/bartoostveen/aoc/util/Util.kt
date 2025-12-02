@@ -7,3 +7,13 @@ fun String.splitAtIndex(index: Int) = require(index in 0..length).let {
 fun <T> Result<T>.printException() = also { it.exceptionOrNull()?.printStackTrace() }
 
 fun String.splitByWhitespace() = split("\\s+")
+
+fun String.startsWithFromIndex(i: Int, other: String): Boolean {
+    if (length < other.length + i) return false
+
+    for (j in 0..<other.length) {
+        if (this[i + j] != other[j]) return false
+    }
+
+    return true
+}
