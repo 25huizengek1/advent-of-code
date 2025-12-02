@@ -88,9 +88,10 @@ suspend fun main(args: Array<String>) {
 
     val solution = solutions[year]?.get(day) ?: return println("Day $day of $year not yet implemented!")
 
+    val fileName = "$year${day.toString().padStart(2, '0')}"
     val inputs = runCatching {
         val cacheFile = Environment.AOC_INPUT_CACHE
-            .resolve("$year${day.toString().padStart(2, '0')}.txt")
+            .resolve("$fileName.txt")
 
         cacheFile.takeIf { it.exists() }?.readText()?.takeIf { it.isNotBlank() }
             ?: fetchInputs(year, day).also(cacheFile::writeText)
@@ -99,6 +100,17 @@ suspend fun main(args: Array<String>) {
 
     println("Running day $day of $year...")
     Puzzle(inputs).also(solution).print()
+
+    Environment.AOC_INPUT_CACHE
+        .resolve("$fileName.test.txt")
+        .takeIf { it.exists() }
+        ?.readText()
+        ?.takeIf { it.isNotBlank() }
+        ?.let {
+            println()
+            println("Found test inputs, running as well...")
+            Puzzle(it).also(solution).print()
+        }
 }
 
 val httpClient = HttpClient(CIO) {
