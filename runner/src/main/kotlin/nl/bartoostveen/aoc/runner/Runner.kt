@@ -109,6 +109,14 @@ suspend fun main(args: Array<String>) {
         ?: return println("Cannot get inputs, stopping...")
 
     println("Running day $day of $year...")
+
+    if (Environment.AOC_WARMUPS != 0) {
+        println("Warming JVM up with ${Environment.AOC_WARMUPS} warmups")
+        repeat(Environment.AOC_WARMUPS) {
+            Puzzle(inputs).apply(solution)
+        }
+    }
+
     Puzzle(inputs).apply {
         printMicros("Solution") {
             solution()

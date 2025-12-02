@@ -35,4 +35,5 @@ object Environment {
 
     val AOC_TOKEN by variable()
     val AOC_INPUT_CACHE by variable({ DEFAULT_AOC_CACHE }, { File(it).also(File::mkdirs) })
+    val AOC_WARMUPS by variable({ 0 }, int)
 }
