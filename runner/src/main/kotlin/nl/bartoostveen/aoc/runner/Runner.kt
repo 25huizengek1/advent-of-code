@@ -17,6 +17,8 @@ import java.time.LocalDateTime
 import java.time.Month
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
+import kotlin.system.measureNanoTime
+import kotlin.time.measureTimedValue
 
 val env = System.getenv().toMutableMap()
 
@@ -24,6 +26,7 @@ val solutions: Map<Int, Map<Int, Puzzle.() -> Unit>> = mapOf(
     2025 to mapOf(
         1 to day202501,
         2 to day202502,
+        3 to day202503,
     ),
 )
 
@@ -68,6 +71,13 @@ data class Puzzle(
 
 fun puzzle(block: Puzzle.() -> Unit) = block
 
+inline fun <T> printMicros(
+    name: String? = null,
+    crossinline block: () -> T
+) = measureTimedValue(block)
+    .also { println("${name?.plus(" ") ?: ""}took ${it.duration.inWholeMicroseconds}us") }
+    .value
+
 suspend fun main(args: Array<String>) {
     val envFile = File(args.firstOrNull() ?: ".env")
     if (envFile.exists()) runCatching {
@@ -99,7 +109,11 @@ suspend fun main(args: Array<String>) {
         ?: return println("Cannot get inputs, stopping...")
 
     println("Running day $day of $year...")
-    Puzzle(inputs).also(solution).print()
+    Puzzle(inputs).apply {
+        printMicros("Solution") {
+            solution()
+        }
+    }.print()
 
     Environment.AOC_INPUT_CACHE
         .resolve("$fileName.test.txt")
@@ -109,7 +123,11 @@ suspend fun main(args: Array<String>) {
         ?.let {
             println()
             println("Found test inputs, running as well...")
-            Puzzle(it).also(solution).print()
+            Puzzle(it).apply {
+                printMicros("Test solution") {
+                    solution()
+                }
+            }.print()
         }
 }
 
