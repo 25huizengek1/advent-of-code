@@ -1,0 +1,72 @@
+package nl.bartoostveen.aoc.util
+
+private fun <T> Grid<T>.assertValidSize() =
+    require(elements.size == width * height) { "Invalid grid!" }
+
+abstract class Grid<T> : List<T> {
+    abstract val elements: List<T>
+    abstract val width: Int
+    abstract val height: Int
+
+    fun index(x: Int, y: Int) = y * width + x
+    fun index(point: Vec2i) = point.y * width + point.x
+    operator fun get(x: Int, y: Int) = elements[index(x, y)]
+    operator fun get(point: Vec2i) = elements[index(point)]
+    fun getOrNull(x: Int, y: Int) = elements.getOrNull(index(x, y))
+    fun getOrNull(point: Vec2i) = elements.getOrNull(index(point))
+    fun row(row: Int): List<T> {
+        val start = row * width
+        return elements.subList(start, start + width)
+    }
+
+    fun column(col: Int) = (0..<height).map { elements[it * width + col] }
+    fun toMutableGrid() = MutableGrid(elements.toMutableList(), width, height)
+    fun adjacent(point: Vec2i, sides: List<Direction> = Direction.all) = sides
+        .asSequence()
+        .map { side -> point + side }
+        .filter { it.x in 0..<width && it.y in 0..<height }
+
+    val points: Sequence<Vec2i>
+        get() {
+            val range = 0..<height
+            return (0..<width)
+                .asSequence()
+                .flatMap { x -> range.map { y -> x point y } }
+        }
+}
+
+data class ImmutableGrid<T>(
+    override val elements: List<T>,
+    override val width: Int,
+    override val height: Int
+) : Grid<T>(), List<T> by elements {
+    init {
+        assertValidSize()
+    }
+}
+
+data class MutableGrid<T>(
+    override val elements: MutableList<T>,
+    override val width: Int,
+    override val height: Int
+) : Grid<T>(), MutableList<T> by elements {
+    init {
+        assertValidSize()
+    }
+
+    operator fun set(x: Int, y: Int, value: T) {
+        elements[index(x, y)] = value
+    }
+
+    operator fun set(point: Vec2i, value: T) {
+        elements[index(point)] = value
+    }
+}
+
+fun <T> List<String>.toGrid(map: (Char) -> T): Grid<T> = ImmutableGrid(
+    elements = flatMap { row -> row.toCharArray().map(map) },
+    width = first().length,
+    height = size
+)
+
+fun List<String>.toGrid() = toGrid { it }
