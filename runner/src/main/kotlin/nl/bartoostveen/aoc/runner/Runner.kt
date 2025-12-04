@@ -10,14 +10,14 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.userAgent
 import nl.bartoostveen.aoc.days.*
+import nl.bartoostveen.aoc.util.Puzzle
+import nl.bartoostveen.aoc.util.Solution
 import nl.bartoostveen.aoc.util.printException
+import nl.bartoostveen.aoc.util.printMicros
 import nl.bartoostveen.aoc.util.splitAtIndex
 import java.io.File
 import java.time.LocalDateTime
 import java.time.Month
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
-import kotlin.time.measureTimedValue
 
 val env = System.getenv().toMutableMap()
 
@@ -27,59 +27,9 @@ val solutions: Map<Int, Map<Int, Puzzle.() -> Unit>> = mapOf(
         2 to day202502,
         3 to day202503,
         4 to day202504,
+        5 to day202505,
     ),
 )
-
-data class Puzzle(
-    val raw: String
-) {
-    val lines: List<String> by lazy {
-        raw.lines().filter { it.isNotBlank() }.map { it.trim() }
-    }
-
-    private val values = mutableListOf<Any?>()
-
-    private fun <T : Any> part() = object : ReadWriteProperty<Puzzle, T?> {
-        private val index = values.size
-
-        init {
-            values.add(null)
-        }
-
-        @Suppress("UNCHECKED_CAST")
-        override fun getValue(thisRef: Puzzle, property: KProperty<*>) = values[index] as? T
-
-        override fun setValue(
-            thisRef: Puzzle,
-            property: KProperty<*>,
-            value: T?
-        ) {
-            values[index] = value
-        }
-    }
-
-    var partOne: Any? by part()
-    var partTwo: Any? by part()
-
-    fun print() {
-        println("Solved AOC puzzle:")
-        values.forEachIndexed { i, value ->
-            println("Part ${i + 1}: ${value ?: "Unimplemented"}")
-        }
-    }
-}
-
-typealias Solution = Puzzle.() -> Unit
-
-// marker function
-fun puzzle(block: Solution) = block
-
-inline fun <T> printMicros(
-    name: String? = null,
-    crossinline block: () -> T
-) = measureTimedValue(block)
-    .also { println("${name?.plus(" ") ?: ""}took ${it.duration.inWholeMicroseconds}μs") }
-    .value
 
 suspend fun main(args: Array<String>) {
     val envFile = File(args.firstOrNull() ?: ".env")

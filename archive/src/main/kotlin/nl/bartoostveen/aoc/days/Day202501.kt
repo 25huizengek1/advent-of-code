@@ -1,6 +1,6 @@
 package nl.bartoostveen.aoc.days
 
-import nl.bartoostveen.aoc.runner.puzzle
+import nl.bartoostveen.aoc.util.puzzle
 import kotlin.math.abs
 
 val day202501 = puzzle {

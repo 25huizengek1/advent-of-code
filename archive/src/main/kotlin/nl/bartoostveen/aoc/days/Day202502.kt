@@ -1,6 +1,6 @@
 package nl.bartoostveen.aoc.days
 
-import nl.bartoostveen.aoc.runner.puzzle
+import nl.bartoostveen.aoc.util.puzzle
 import nl.bartoostveen.aoc.util.startsWithFromIndex
 
 val day202502 = puzzle {

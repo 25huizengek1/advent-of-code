@@ -1,6 +1,6 @@
 package nl.bartoostveen.aoc.days
 
-import nl.bartoostveen.aoc.runner.puzzle
+import nl.bartoostveen.aoc.util.puzzle
 
 val day202503 = puzzle {
     val banks = lines
