@@ -21,10 +21,13 @@ abstract class Grid<T> : List<T> {
 
     fun column(col: Int) = (0..<height).map { elements[it * width + col] }
     fun toMutableGrid() = MutableGrid(elements.toMutableList(), width, height)
-    fun adjacent(point: Vec2i, sides: List<Direction> = Direction.all) = sides
+
+    fun adjacentPoints(point: Vec2i, sides: List<Direction> = Direction.all) = sides
         .asSequence()
         .map { side -> point + side }
         .filter { it.x in 0..<width && it.y in 0..<height }
+
+    fun adjacent(point: Vec2i, sides: List<Direction> = Direction.all) = adjacentPoints(point, sides).map(::get)
 
     val points: Sequence<Vec2i>
         get() {
