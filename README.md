@@ -36,21 +36,21 @@ $ gradle run --args="<year> <day>"
 
 ### 2025
 
-- [ ] Day 01
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 02
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 03
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 04
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 05
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 01
+    - [x] Part 1
+    - [x] Part 2
+- [x] Day 02
+    - [x] Part 1
+    - [x] Part 2
+- [x] Day 03
+    - [x] Part 1
+    - [x] Part 2
+- [x] Day 04
+    - [x] Part 1
+    - [x] Part 2
+- [x] Day 05
+    - [x] Part 1
+    - [x] Part 2
 - [ ] Day 06
     - [ ] Part 1
     - [ ] Part 2
