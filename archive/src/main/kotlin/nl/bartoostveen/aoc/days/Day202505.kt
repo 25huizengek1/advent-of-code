@@ -28,6 +28,6 @@ val day202505 = puzzle {
         }
     }
 
-    partOne = ids.lines().count { id -> simplifiedRanges.any { id.toLong() in it } }
+    partOne = ids.lines().map { it.toLong() }.count { id -> simplifiedRanges.any { id in it } }
     partTwo = simplifiedRanges.sumOf { it.last - it.first + 1 }
 }
