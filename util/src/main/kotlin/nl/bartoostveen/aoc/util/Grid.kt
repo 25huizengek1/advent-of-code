@@ -1,7 +1,9 @@
+@file:Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
+
 package nl.bartoostveen.aoc.util
 
 private fun <T> Grid<T>.assertValidSize() =
-    require(elements.size == width * height) { "Invalid grid!" }
+    require(elements.size == width * height) { "Invalid grid! Expected: ${elements.size}, actual: width ($width) * height ($height) = ${width * height}" }
 
 abstract class Grid<T> : List<T> {
     abstract val elements: List<T>
@@ -36,6 +38,10 @@ abstract class Grid<T> : List<T> {
                 .asSequence()
                 .flatMap { x -> range.map { y -> x point y } }
         }
+
+    val rows get() = (0 until height).asSequence().map { row(it) }
+
+    val columns get() = (0 until width).asSequence().map { column(it) }
 }
 
 data class ImmutableGrid<T>(
@@ -72,4 +78,6 @@ fun <T> List<String>.toGrid(map: (Char) -> T): Grid<T> = ImmutableGrid(
     height = size
 )
 
+fun <T> List<List<T>>.toGrid() = flatten().toGrid(first().size, size)
+fun <T> List<T>.toGrid(width: Int, height: Int) = ImmutableGrid(this, width, height)
 fun List<String>.toGrid() = toGrid { it }
