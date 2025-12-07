@@ -12,20 +12,13 @@ val day202507 = puzzle {
     var splits = 0
 
     fun solve(head: Vec2i): Long = seen.getOrPut(head) {
-        if (head !in diagram) return@getOrPut 1L
+        val down = head + Direction.DOWN
 
-        val down = head + Direction.DOWN.vec
         if (down !in diagram) return@getOrPut 1L
+        if (diagram[down] == '.') return@getOrPut solve(down)
 
-        if (diagram[down] == '.') {
-            return@getOrPut solve(down)
-        } else {
-            // otherwise, we assume it to be a splitter
-            val left = down + Direction.LEFT.vec
-            val right = down + Direction.RIGHT.vec
-            splits++
-            solve(left) + solve(right)
-        }
+        splits++
+        solve(down + Direction.LEFT) + solve(down + Direction.RIGHT)
     }
 
     partTwo = solve(start)
