@@ -10,10 +10,14 @@ abstract class Grid<T> : List<T> {
     abstract val width: Int
     abstract val height: Int
 
+    private val yRange by lazy { 0..<height }
+    private val xRange by lazy { 0..<width }
+
     fun index(x: Int, y: Int) = y * width + x
     fun index(point: Vec2i) = point.y * width + point.x
     operator fun get(x: Int, y: Int) = elements[index(x, y)]
     operator fun get(point: Vec2i) = elements[index(point)]
+    operator fun contains(point: Vec2i) = point.x in xRange && point.y in yRange
     fun getOrNull(x: Int, y: Int) = elements.getOrNull(index(x, y))
     fun getOrNull(point: Vec2i) = elements.getOrNull(index(point))
     fun row(row: Int): List<T> {
@@ -21,27 +25,29 @@ abstract class Grid<T> : List<T> {
         return elements.subList(start, start + width)
     }
 
-    fun column(col: Int) = (0..<height).map { elements[it * width + col] }
+    fun column(col: Int) = yRange.map { elements[it * width + col] }
     fun toMutableGrid() = MutableGrid(elements.toMutableList(), width, height)
 
-    fun adjacentPoints(point: Vec2i, sides: List<Direction> = Direction.all) = sides
+    fun adjacentPoints(
+        point: Vec2i,
+        sides: List<Direction> = Direction.all
+    ) = sides
         .asSequence()
         .map { side -> point + side }
         .filter { it.x in 0..<width && it.y in 0..<height }
 
-    fun adjacent(point: Vec2i, sides: List<Direction> = Direction.all) = adjacentPoints(point, sides).map(::get)
+    fun adjacent(
+        point: Vec2i,
+        sides: List<Direction> = Direction.all
+    ) = adjacentPoints(point, sides).map(::get)
 
     val points: Sequence<Vec2i>
-        get() {
-            val range = 0..<height
-            return (0..<width)
-                .asSequence()
-                .flatMap { x -> range.map { y -> x point y } }
-        }
+        get() = yRange
+            .asSequence()
+            .flatMap { y -> xRange.map { x -> x point y } }
 
-    val rows get() = (0 until height).asSequence().map { row(it) }
-
-    val columns get() = (0 until width).asSequence().map { column(it) }
+    val rows get() = yRange.asSequence().map { row(it) }
+    val columns get() = xRange.asSequence().map { column(it) }
 }
 
 data class ImmutableGrid<T>(

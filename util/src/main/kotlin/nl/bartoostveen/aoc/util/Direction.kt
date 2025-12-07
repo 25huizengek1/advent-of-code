@@ -13,8 +13,8 @@ value class Direction private constructor(val vec: Vec2i) {
     }
 
     companion object {
-        val UP = Direction(0, 1)
-        val DOWN = Direction(0, -1)
+        val UP = Direction(0, -1)
+        val DOWN = Direction(0, 1)
         val LEFT = Direction(-1, 0)
         val RIGHT = Direction(1, 0)
         val TOP_LEFT = UP + LEFT
