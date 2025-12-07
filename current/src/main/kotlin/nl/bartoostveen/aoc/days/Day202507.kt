@@ -8,27 +8,26 @@ import nl.bartoostveen.aoc.util.toGrid
 val day202507 = puzzle {
     val diagram = lines.toGrid()
     val start = diagram.points.first { diagram[it] == 'S' }
-    val seen = mutableSetOf<Vec2i>()
+    val seen = hashMapOf<Vec2i, Long>()
     var splits = 0
 
-    fun solve(head: Vec2i) {
-        if (head in seen || head !in diagram) return
-        seen += head
+    fun solve(head: Vec2i): Long = seen.getOrPut(head) {
+        if (head !in diagram) return@getOrPut 1L
 
         val down = head + Direction.DOWN.vec
-        if (down !in diagram) return
+        if (down !in diagram) return@getOrPut 1L
+
         if (diagram[down] == '.') {
-            return solve(down)
+            return@getOrPut solve(down)
         } else {
             // otherwise, we assume it to be a splitter
             val left = down + Direction.LEFT.vec
             val right = down + Direction.RIGHT.vec
             splits++
-            solve(left)
-            solve(right)
+            solve(left) + solve(right)
         }
     }
 
-    solve(start)
+    partTwo = solve(start)
     partOne = splits
 }
