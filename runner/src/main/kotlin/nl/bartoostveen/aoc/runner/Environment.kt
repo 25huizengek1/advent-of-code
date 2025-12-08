@@ -4,11 +4,20 @@ import java.io.File
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 
-private val DEFAULT_AOC_CACHE = File("/home/bart/advent-of-code/.cache/aoc").also { it.mkdirs() }
-
 object Environment {
     private val id: (String) -> String = { it }
     private val int: (String) -> Int = { it.toInt() }
+    private val boolean: (String) -> Boolean = {
+        when (it) {
+            "1", "true" -> true
+            "0", "false" -> false
+            else -> error("Invalid boolean $it")
+        }
+    }
+
+    private inline fun <reified T : Enum<T>> enum(
+        crossinline mapper: (T) -> String = { it.name }
+    ): (String) -> T = { enumValues<T>().first { enum -> mapper(enum) == it } }
 
     private val required = { error("Property required, but not given!") }
 
@@ -33,7 +42,14 @@ object Environment {
         envName = envName
     )
 
+    enum class RunMode {
+        BOTH,
+        REGULAR,
+        TEST
+    }
+
     val AOC_TOKEN by variable()
-    val AOC_INPUT_CACHE by variable({ DEFAULT_AOC_CACHE }, { File(it).also(File::mkdirs) })
+    val AOC_INPUT_CACHE by variable(required, { File(it).also(File::mkdirs) })
     val AOC_WARMUPS by variable({ 0 }, int)
+    val AOC_RUN_MODE by variable({ RunMode.BOTH }, enum())
 }

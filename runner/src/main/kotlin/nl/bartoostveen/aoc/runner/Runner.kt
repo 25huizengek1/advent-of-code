@@ -35,10 +35,13 @@ val solutions: Map<Int, Map<Int, Puzzle.() -> Unit>> = mapOf(
 )
 
 suspend fun main(args: Array<String>) {
-    val envFile = File(args.firstOrNull() ?: ".env")
+    val envFile = File(".env")
     if (envFile.exists()) runCatching {
-        envFile.readLines().map { line ->
-            val (key, value) = line.splitAtIndex(line.indexOf('='))
+        for (line in envFile.readLines()) {
+            val (rawKey, value) = line.splitAtIndex(line.indexOf('='))
+            val key = rawKey.trim()
+            if (key.firstOrNull()?.isLetter() != true) continue
+
             env[key] = value
             println("Loading env var $key")
         }
@@ -74,13 +77,13 @@ suspend fun main(args: Array<String>) {
         }
     }
 
-    Puzzle(inputs).apply {
+    if (Environment.AOC_RUN_MODE != Environment.RunMode.TEST) Puzzle(inputs).apply {
         printMicros("Solution") {
             solution()
         }
     }.print()
 
-    Environment.AOC_INPUT_CACHE
+    if (Environment.AOC_RUN_MODE != Environment.RunMode.REGULAR) Environment.AOC_INPUT_CACHE
         .resolve("$fileName.test.txt")
         .takeIf { it.exists() }
         ?.readText()
@@ -89,8 +92,12 @@ suspend fun main(args: Array<String>) {
             println()
             println("Found test inputs, running as well...")
             Puzzle(it).apply {
-                printMicros("Test solution") {
-                    solution()
+                runCatching {
+                    printMicros("Test solution") {
+                        solution()
+                    }
+                }.printException().onFailure {
+                    println("Running test solution failed, see stack trace above, not throwing...")
                 }
             }.print()
         }
