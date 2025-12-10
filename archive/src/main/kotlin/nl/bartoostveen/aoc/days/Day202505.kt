@@ -1,6 +1,7 @@
 package nl.bartoostveen.aoc.days
 
 import nl.bartoostveen.aoc.util.puzzle
+import nl.bartoostveen.aoc.util.simplify
 import kotlin.math.max
 
 val day202505 = puzzle {
@@ -12,22 +13,8 @@ val day202505 = puzzle {
             a..b
         }
         .sortedBy { it.first }
+        .simplify()
 
-    val simplifiedRanges = mutableListOf<LongRange>()
-    ranges.forEach { range ->
-        val prev = simplifiedRanges.lastOrNull()
-        if (prev == null) {
-            simplifiedRanges.add(range)
-            return@forEach
-        }
-
-        when {
-            prev.last < range.first -> simplifiedRanges.add(range)
-            else -> simplifiedRanges[simplifiedRanges.size - 1] =
-                prev.first..(max(prev.last, range.last))
-        }
-    }
-
-    partOne = ids.lines().map { it.toLong() }.count { id -> simplifiedRanges.any { id in it } }
-    partTwo = simplifiedRanges.sumOf { it.last - it.first + 1 }
+    partOne = ids.lines().map { it.toLong() }.count { id -> ranges.any { id in it } }
+    partTwo = ranges.sumOf { it.last - it.first + 1 }
 }

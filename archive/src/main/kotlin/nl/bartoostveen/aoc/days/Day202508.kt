@@ -5,12 +5,15 @@ import nl.bartoostveen.aoc.util.*
 val day202508 = puzzle {
     unionFind {
         val points = lines.map {
-            it.split(',').take(3).map(String::toInt).three
+            it
+                .split(',')
+                .take(3)
+                .map(String::toInt)
+                .three
         }
 
-        var done = 0
+        var combinedPairs = 0
         val seen = hashSetOf<TupleSet<Vec3i>>()
-
         points
             .permutations2()
             .sortedBy { (a, b) -> a euclidTo b }
@@ -18,7 +21,7 @@ val day202508 = puzzle {
             .forEach { pair ->
                 if (!seen.add(pair)) return@forEach
 
-                if (++done == 1000) partOne = islands
+                if (++combinedPairs == 1000) partOne = islands
                     .values
                     .map { it.size }
                     .sortedDescending()

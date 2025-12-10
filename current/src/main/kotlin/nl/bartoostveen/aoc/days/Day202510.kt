@@ -1,6 +1,6 @@
 package nl.bartoostveen.aoc.days
 
-import nl.bartoostveen.aoc.util.puzzle
+import nl.bartoostveen.aoc.util.*
 
 val day202510 = puzzle {
 }
