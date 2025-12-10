@@ -28,6 +28,11 @@ data class Vec2i(val x: Int, val y: Int) {
 
 infix fun Int.point(other: Int) = Vec2i(this, other)
 fun Pair<Int, Int>.toPoint() = first point second
+val List<Int>.two: Vec2i
+    get() {
+        val (x, y) = take(2)
+        return Vec2i(x, y)
+    }
 
 @ConsistentCopyVisibility
 data class Rect internal constructor(val topLeft: Vec2i, val bottomRight: Vec2i) {
@@ -66,16 +71,26 @@ data class Vec3i(val x: Int, val y: Int, val z: Int) {
 
     operator fun div(other: Vec3i) = Vec3i(x / other.x, y / other.y, z / other.z)
     infix fun distanceTo(other: Vec3i) = sqrt(
-        (other.x - x).toDouble().pow(2) +
-                (other.y - y).toDouble().pow(2) +
-                (other.z - z).toDouble().pow(2)
+        (other.x - x).toDouble().let { it * it } +
+                (other.y - y).toDouble().let { it * it } +
+                (other.z - z).toDouble().let { it * it }
     )
+
+    infix fun euclidTo(other: Vec3i) =
+        (x - other.x).toLong().let { it * it } +
+                (y - other.y).toLong().let { it * it } +
+                (z - other.z).toLong().let { it * it }
 
     val length get() = distanceTo(unit)
 }
 
 infix fun Vec2i.point(other: Int) = Vec3i(this, other)
 fun Triple<Int, Int, Int>.toVector() = first point second point third
+val List<Int>.three: Vec3i
+    get() {
+        val (x, y, z) = take(3)
+        return Vec3i(x, y, z)
+    }
 
 @ConsistentCopyVisibility
 data class Cube internal constructor(val lowerBound: Vec3i, val upperBound: Vec3i) {
