@@ -13,7 +13,7 @@ val day202508 = puzzle {
         }
 
         var combinedPairs = 0
-        val seen = hashSetOf<TupleSet<Vec3i>>()
+        val seen = hashSetOf<SetTuple<Vec3i>>()
         points
             .permutations2()
             .sortedBy { (a, b) -> a euclidTo b }

@@ -2,7 +2,6 @@ package nl.bartoostveen.aoc.days
 
 import nl.bartoostveen.aoc.util.puzzle
 import nl.bartoostveen.aoc.util.simplify
-import kotlin.math.max
 
 val day202505 = puzzle {
     val (rangesText, ids) = raw.trim().split("\n\n")
