@@ -4,5 +4,5 @@ plugins {
 
 kotlin {
     jvmToolchain(25)
-    compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
+    compilerOptions.freeCompilerArgs.addAll("-Xcontext-parameters", "-Xnested-type-aliases")
 }
