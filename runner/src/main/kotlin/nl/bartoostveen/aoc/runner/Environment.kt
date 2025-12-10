@@ -15,9 +15,8 @@ object Environment {
         }
     }
 
-    private inline fun <reified T : Enum<T>> enum(
-        crossinline mapper: (T) -> String = { it.name }
-    ): (String) -> T = { enumValues<T>().first { enum -> mapper(enum) == it } }
+    private inline fun <reified T : Enum<T>> enum(crossinline mapper: (T) -> String = { it.name }): (String) -> T =
+        { enumValues<T>().first { enum -> mapper(enum) == it } }
 
     private val required = { error("Property required, but not given!") }
 

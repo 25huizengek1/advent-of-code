@@ -7,9 +7,10 @@ fun <T> Sequence<T>.split(predicate: (T) -> Boolean): Sequence<List<T>> = sequen
         if (predicate(p)) {
             if (acc.isNotEmpty()) yield(acc)
             acc = mutableListOf()
-        } else acc += p
+        } else {
+            acc += p
+        }
     }
 
     if (acc.isNotEmpty()) yield(acc)
 }
-
