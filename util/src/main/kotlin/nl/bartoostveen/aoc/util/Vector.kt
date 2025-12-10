@@ -52,21 +52,21 @@ data class Rect internal constructor(val min: Vec2i, val max: Vec2i) {
 
     infix fun overlaps(other: Rect) = xRange overlaps other.xRange && yRange overlaps other.xRange
     infix fun intersects(other: Rect) = when {
-        other.isVerticalLine -> intersectsStraight(
+        other.isVerticalLine -> lineIntersect(
             line = other,
             coordinate = Vec2i::x,
             opposite = Vec2i::y,
             range = Rect::xRange
         )
 
-        other.isHorizontalLine -> intersectsStraight(
+        other.isHorizontalLine -> lineIntersect(
             line = other,
             coordinate = Vec2i::y,
             opposite = Vec2i::x,
             range = Rect::yRange
         )
 
-        else -> error("Impossible")
+        else -> error("Not implemented")
     }
 }
 
@@ -77,7 +77,7 @@ infix fun IntProgression.overlaps(other: IntProgression): Boolean {
     return (other.first in min..max) || (other.last in min..max)
 }
 
-private fun Rect.intersectsStraight(
+private fun Rect.lineIntersect(
     line: Rect,
     coordinate: (Vec2i) -> Int,
     opposite: (Vec2i) -> Int,
