@@ -35,21 +35,74 @@ val List<Int>.two: Vec2i
     }
 
 @ConsistentCopyVisibility
-data class Rect internal constructor(val topLeft: Vec2i, val bottomRight: Vec2i) {
-    val area get() = (bottomRight.x - topLeft.x) * (topLeft.y - bottomRight.y)
-    val square get() = (topLeft - bottomRight).let { it.x == it.y }
+data class Rect internal constructor(val min: Vec2i, val max: Vec2i) {
+    val width get() = max.x - min.x + 1
+    val height get() = max.y - min.y + 1
+    val xRange get() = min.x..max.x
+    val yRange get() = min.y..max.y
+    val area get() = width.toLong() * height.toLong()
+
+    val isHorizontalLine get() = min.y == max.y
+    val isVerticalLine get() = min.x == max.x
+
+    fun shrink(amount: Int) = Rect(
+        Vec2i(min.x + amount, min.y + amount),
+        Vec2i(max.x - amount, max.y - amount),
+    )
+
+    infix fun overlaps(other: Rect) = xRange overlaps other.xRange && yRange overlaps other.xRange
+    infix fun intersects(other: Rect) = when {
+        other.isVerticalLine -> intersectsStraight(
+            line = other,
+            coordinate = Vec2i::x,
+            opposite = Vec2i::y,
+            range = Rect::xRange
+        )
+
+        other.isHorizontalLine -> intersectsStraight(
+            line = other,
+            coordinate = Vec2i::y,
+            opposite = Vec2i::x,
+            range = Rect::yRange
+        )
+
+        else -> error("Impossible")
+    }
 }
 
+infix fun IntProgression.overlaps(other: IntProgression): Boolean {
+    val max = maxOf(first, last)
+    val min = minOf(first, last)
+
+    return (other.first in min..max) || (other.last in min..max)
+}
+
+private fun Rect.intersectsStraight(
+    line: Rect,
+    coordinate: (Vec2i) -> Int,
+    opposite: (Vec2i) -> Int,
+    range: (Rect) -> IntRange
+) = coordinate(line.min) in range(shrink(1)) && maxOf(opposite(min), opposite(line.min)) < minOf(
+    opposite(max),
+    opposite(line.max)
+)
+
 infix fun Vec2i.rect(other: Vec2i) = Rect(
-    topLeft = Vec2i(
+    min = Vec2i(
         x = min(x, other.x),
-        y = max(y, other.y)
-    ),
-    bottomRight = Vec2i(
-        x = max(x, other.x),
         y = min(y, other.y)
+    ),
+    max = Vec2i(
+        x = max(x, other.x),
+        y = max(y, other.y)
     )
 )
+
+val List<Vec2i>.rect: Rect
+    get() {
+        val (a, b) = take(2)
+        return a rect b
+    }
 
 data class Vec3i(val x: Int, val y: Int, val z: Int) {
     companion object {

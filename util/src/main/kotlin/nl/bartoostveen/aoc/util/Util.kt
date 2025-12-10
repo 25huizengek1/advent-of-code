@@ -81,8 +81,7 @@ fun <T> Iterable<T>.combinations() = toList().combinations()
 fun <T> Iterable<T>.combinations(r: Int) = toList().combinations(r)
 fun <T> List<T>.combinations(r: Int = size) =
     indices
-        .permutations()
-        .take(r)
+        .permutations(r)
         .filter { it.sorted() == it }.map { p -> p.map { this[it] } }
 
 fun <T> Iterable<T>.permutations2(): Sequence<Pair<T, T>> = sequence {
@@ -118,3 +117,9 @@ fun <T> Pair<T, T>.unordered() = TupleSet(first, second)
 fun <T> TupleSet<T>.ordered() = first to second
 
 infix fun <T> T.with(other: T) = TupleSet(this, other)
+
+fun <T : Comparable<Number>> T.sign() = when {
+    this > 0 -> 1
+    this < 0 -> -1
+    else -> 0
+}
