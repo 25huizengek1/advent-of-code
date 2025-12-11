@@ -1,7 +1,15 @@
 package nl.bartoostveen.aoc.util
 
-fun String.splitAtIndex(index: Int) = require(index in 0..length).let {
-    take(index) to substring(index + 1)
+fun <T> List<T>.splitAtIndex(
+    index: Int,
+    dismissAtSplit: Boolean = false
+) = require(index in 0..size).let {
+    take(index) to drop(index + if (dismissAtSplit) 1 else 0)
+}
+
+fun String.splitAtIndex(index: Int): Pair<String, String> {
+    val (fst, snd) = toList().splitAtIndex(index, true)
+    return fst.toCharArray().concatToString() to snd.toCharArray().concatToString()
 }
 
 fun String.splitByWhitespace() = split("\\s+".toRegex())
