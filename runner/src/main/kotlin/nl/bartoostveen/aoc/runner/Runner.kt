@@ -35,6 +35,9 @@ val solutions: Map<Int, Map<Int, Puzzle.() -> Unit>> = mapOf(
         10 to day202510,
         11 to day202511,
         12 to day202512
+    ),
+    2026 to mapOf(
+        1 to day202601
     )
 )
 

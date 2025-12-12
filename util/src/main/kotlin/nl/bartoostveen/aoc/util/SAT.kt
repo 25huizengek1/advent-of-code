@@ -22,7 +22,10 @@ object SAT {
 
     typealias Assignment = Set<Literal>
 
+    @get:JvmName("wrapCnf")
     val Set<Set<Literal>>.asCnf get() = map { it.asClause }.toSet().asCnf
+
+    @get:JvmName("wrapClauses")
     val Set<Clause>.asCnf get() = Cnf(this)
     val Set<Literal>.asClause get() = Clause(this)
 
