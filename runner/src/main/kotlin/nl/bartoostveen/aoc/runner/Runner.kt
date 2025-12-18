@@ -43,19 +43,17 @@ val solutions: Map<Int, Map<Int, Puzzle.() -> Unit>> = mapOf(
 
 suspend fun main(args: Array<String>) {
     val envFile = File(".env")
-    if (envFile.exists()) {
-        runCatching {
-            for (line in envFile.readLines()) {
-                val (rawKey, value) = line.splitAtIndex(line.indexOf('='))
-                val key = rawKey.trim()
-                if (key.firstOrNull()?.isLetter() != true) continue
+    if (envFile.exists()) runCatching {
+        for (line in envFile.readLines()) {
+            val (rawKey, value) = line.splitAtIndex(line.indexOf('='))
+            val key = rawKey.trim()
+            if (key.firstOrNull()?.isLetter() != true) continue
 
-                env[key] = value
-                println("Loading env var $key")
-            }
-        }.onFailure {
-            println("Note: loading $envFile env file failed! Please check the formatting and try again.")
+            env[key] = value
+            println("Loading env var $key")
         }
+    }.onFailure {
+        println("Note: loading $envFile env file failed! Please check the formatting and try again.")
     }
 
     val now = LocalDateTime.now()
@@ -86,34 +84,30 @@ suspend fun main(args: Array<String>) {
         }
     }
 
-    if (Environment.AOC_RUN_MODE != Environment.RunMode.TEST) {
-        Puzzle(inputs).apply {
-            printMicros("Solution") {
-                solution()
-            }
-        }.print()
-    }
+    if (Environment.AOC_RUN_MODE != Environment.RunMode.TEST) Puzzle(inputs).apply {
+        printMicros("Solution") {
+            solution()
+        }
+    }.print()
 
-    if (Environment.AOC_RUN_MODE != Environment.RunMode.REGULAR) {
-        Environment.AOC_INPUT_CACHE
-            .resolve("$fileName.test.txt")
-            .takeIf { it.exists() }
-            ?.readText()
-            ?.takeIf { it.isNotBlank() }
-            ?.let {
-                println()
-                println("Found test inputs, running as well...")
-                Puzzle(it).apply {
-                    runCatching {
-                        printMicros("Test solution") {
-                            solution()
-                        }
-                    }.printException().onFailure {
-                        println("Running test solution failed, see stack trace above, not throwing...")
+    if (Environment.AOC_RUN_MODE != Environment.RunMode.REGULAR) Environment.AOC_INPUT_CACHE
+        .resolve("$fileName.test.txt")
+        .takeIf { it.exists() }
+        ?.readText()
+        ?.takeIf { it.isNotBlank() }
+        ?.let {
+            println()
+            println("Found test inputs, running as well...")
+            Puzzle(it).apply {
+                runCatching {
+                    printMicros("Test solution") {
+                        solution()
                     }
-                }.print()
-            }
-    }
+                }.printException().onFailure {
+                    println("Running test solution failed, see stack trace above, not throwing...")
+                }
+            }.print()
+        }
 }
 
 val httpClient = HttpClient(CIO) {
@@ -129,7 +123,4 @@ val httpClient = HttpClient(CIO) {
     }
 }
 
-suspend fun fetchInputs(
-    year: Int,
-    day: Int
-) = httpClient.get("/$year/day/$day/input").bodyAsText()
+suspend fun fetchInputs(year: Int, day: Int) = httpClient.get("/$year/day/$day/input").bodyAsText()

@@ -21,14 +21,12 @@ val day202508 = puzzle {
             .forEach { pair ->
                 if (!seen.add(pair)) return@forEach
 
-                if (++combinedPairs == 1000) {
-                    partOne = islands
-                        .values
-                        .map { it.size }
-                        .sortedDescending()
-                        .take(3)
-                        .product()
-                }
+                if (++combinedPairs == 1000) partOne = islands
+                    .values
+                    .map { it.size }
+                    .sortedDescending()
+                    .take(3)
+                    .product()
 
                 addPair(pair)
 

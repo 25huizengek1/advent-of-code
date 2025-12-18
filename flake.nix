@@ -36,7 +36,6 @@
           treefmt = {
             programs.nixfmt.enable = true;
             programs.deadnix.enable = true;
-            programs.ktlint.enable = true;
           };
 
           devShells.default = pkgs.mkShell {

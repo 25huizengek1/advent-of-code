@@ -1,6 +1,9 @@
 package nl.bartoostveen.aoc.util
 
-data class SetTuple<T>(val first: T, val second: T) {
+data class SetTuple<T>(
+    val first: T,
+    val second: T
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is SetTuple<*>) return false
@@ -16,6 +19,7 @@ data class SetTuple<T>(val first: T, val second: T) {
         val bh = second?.hashCode() ?: 0
         return ah xor bh
     }
+
 }
 
 fun <A, B> Pair<A, B>.swap() = second to first

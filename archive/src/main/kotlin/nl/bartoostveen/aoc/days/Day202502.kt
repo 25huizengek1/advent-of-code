@@ -41,3 +41,4 @@ val day202502 = puzzle {
         }
     }
 }
+

@@ -6,14 +6,15 @@ import java.util.Collections
 data class SetUnionFindContext<T> @PublishedApi internal constructor(
     internal val underlying: HashMap<T, Entry<T>> = hashMapOf()
 ) : Map<T, SetUnionFindContext.Entry<T>> by underlying {
-    data class Entry<T>(val value: T, var rank: Int = 0, var parent: Entry<T>? = null) {
+    data class Entry<T>(
+        val value: T,
+        var rank: Int = 0,
+        var parent: Entry<T>? = null
+    ) {
         val root: Entry<T> get() = parent?.root?.also { parent = it } ?: this
     }
 
-    fun contains(
-        first: T,
-        second: T
-    ): Boolean {
+    fun contains(first: T, second: T): Boolean {
         return (root(first) ?: return false) == (root(second) ?: return false)
     }
 
@@ -29,10 +30,7 @@ data class SetUnionFindContext<T> @PublishedApi internal constructor(
     fun addPair(pair: Pair<T, T>) = addPair(pair.first, pair.second)
     fun addPair(pair: SetTuple<T>) = addPair(pair.first, pair.second)
 
-    fun addPair(
-        first: T,
-        second: T
-    ): Boolean {
+    fun addPair(first: T, second: T): Boolean {
         if (contains(first, second)) return false
 
         val firstRoot = rootOfOrNew(first)
@@ -57,7 +55,8 @@ data class SetUnionFindContext<T> @PublishedApi internal constructor(
     val islands get() = keys.groupBy { getValue(it).root }
 }
 
-inline fun <reified T> unionFind(block: SetUnionFindContext<T>.() -> Unit) = SetUnionFindContext<T>().apply(block)
+inline fun <reified T> unionFind(block: SetUnionFindContext<T>.() -> Unit) =
+    SetUnionFindContext<T>().apply(block)
 
 // Thanks for the very efficient permutations impl (github:770grappenmaker)
 fun <T> Iterable<T>.permutations() = toList().permutations()
@@ -92,9 +91,10 @@ fun <T> Iterable<T>.combinations() = toList().combinations()
 fun <T> Sequence<T>.combinations() = toList().combinations()
 fun <T> Iterable<T>.combinations(r: Int) = toList().combinations(r)
 fun <T> Sequence<T>.combinations(r: Int) = toList().combinations(r)
-fun <T> List<T>.combinations(r: Int = size) = indices
-    .permutations(r)
-    .filter { it.sorted() == it }.map { p -> p.map { this[it] } }
+fun <T> List<T>.combinations(r: Int = size) =
+    indices
+        .permutations(r)
+        .filter { it.sorted() == it }.map { p -> p.map { this[it] } }
 
 fun <T> Iterable<T>.permutations2(): Sequence<Pair<T, T>> = sequence {
     forEachIndexed { idx, i ->

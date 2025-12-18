@@ -14,10 +14,7 @@ fun String.splitAtIndex(index: Int): Pair<String, String> {
 
 fun String.splitByWhitespace() = split("\\s+".toRegex())
 
-fun String.startsWithFromIndex(
-    i: Int,
-    other: String
-): Boolean {
+fun String.startsWithFromIndex(i: Int, other: String): Boolean {
     if (length < other.length + i) return false
 
     for (j in 0..<other.length) {

@@ -2,10 +2,7 @@ package nl.bartoostveen.aoc.util
 
 import kotlin.math.max
 
-private fun <T : Comparable<T>> unsafeMax(
-    first: T,
-    second: T
-) = when {
+private fun <T : Comparable<T>> unsafeMax(first: T, second: T) = when {
     first < second -> second
     else -> first
 }

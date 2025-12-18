@@ -19,7 +19,7 @@ data class Vec2i(val x: Int, val y: Int) {
     operator fun div(other: Vec2i) = Vec2i(x / other.x, y / other.y)
     infix fun distanceTo(other: Vec2i) = sqrt(
         (other.x - x).toDouble().pow(2) +
-            (other.y - y).toDouble().pow(2)
+                (other.y - y).toDouble().pow(2)
     )
 
     val length get() = distanceTo(unit)
@@ -47,7 +47,7 @@ data class Rect internal constructor(val min: Vec2i, val max: Vec2i) {
 
     fun shrink(amount: Int) = Rect(
         Vec2i(min.x + amount, min.y + amount),
-        Vec2i(max.x - amount, max.y - amount)
+        Vec2i(max.x - amount, max.y - amount),
     )
 
     infix fun overlaps(other: Rect) = xRange overlaps other.xRange && yRange overlaps other.xRange
@@ -125,13 +125,14 @@ data class Vec3i(val x: Int, val y: Int, val z: Int) {
     operator fun div(other: Vec3i) = Vec3i(x / other.x, y / other.y, z / other.z)
     infix fun distanceTo(other: Vec3i) = sqrt(
         (other.x - x).toDouble().let { it * it } +
-            (other.y - y).toDouble().let { it * it } +
-            (other.z - z).toDouble().let { it * it }
+                (other.y - y).toDouble().let { it * it } +
+                (other.z - z).toDouble().let { it * it }
     )
 
-    infix fun euclidTo(other: Vec3i) = (x - other.x).toLong().let { it * it } +
-        (y - other.y).toLong().let { it * it } +
-        (z - other.z).toLong().let { it * it }
+    infix fun euclidTo(other: Vec3i) =
+        (x - other.x).toLong().let { it * it } +
+                (y - other.y).toLong().let { it * it } +
+                (z - other.z).toLong().let { it * it }
 
     val length get() = distanceTo(unit)
 }
@@ -148,8 +149,8 @@ val List<Int>.three: Vec3i
 data class Cube internal constructor(val lowerBound: Vec3i, val upperBound: Vec3i) {
     val volume
         get() = (upperBound.x - lowerBound.x) *
-            (upperBound.y - lowerBound.y) *
-            (upperBound.z - lowerBound.z)
+                (upperBound.y - lowerBound.y) *
+                (upperBound.z - lowerBound.z)
 }
 
 infix fun Vec3i.cube(other: Vec3i) = Cube(

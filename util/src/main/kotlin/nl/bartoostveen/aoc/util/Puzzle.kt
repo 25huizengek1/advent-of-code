@@ -3,7 +3,9 @@ package nl.bartoostveen.aoc.util
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-data class Puzzle(val raw: String) {
+data class Puzzle(
+    val raw: String
+) {
     val lines: List<String> by lazy {
         raw.lines().filter { it.isNotBlank() }.map { it.trim() }
     }
@@ -18,10 +20,7 @@ data class Puzzle(val raw: String) {
         }
 
         @Suppress("UNCHECKED_CAST")
-        override fun getValue(
-            thisRef: Puzzle,
-            property: KProperty<*>
-        ) = values[index] as? T
+        override fun getValue(thisRef: Puzzle, property: KProperty<*>) = values[index] as? T
 
         override fun setValue(
             thisRef: Puzzle,
